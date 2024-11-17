@@ -1,0 +1,8 @@
+[bastion]
+10.10.30.100
+
+[k8s-01]
+server-01.k8s-01.prod.home.adamatyi.com
+server-02.k8s-01.prod.home.adamatyi.com
+server-03.k8s-01.prod.home.adamatyi.com
+agent-01.k8s-01.prod.home.adamatyi.com

@@ -1,0 +1,35 @@
+---
+- name: Ensure UFW is installed
+  apt:
+    name: ufw
+    state: present
+
+- name: Add bastion host SSH restriction to sshd_config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: "AllowUsers *@10.10.30.100"
+    state: present
+  notify: restart ssh
+
+- name: Delete existing SSH UFW rule
+  ufw:
+    rule: allow
+    port: 22
+    proto: tcp
+    delete: yes
+  
+- name: Allow SSH only from bastion
+  ufw:
+    rule: allow
+    from_ip: 10.10.30.100
+    to_port: 22
+    proto: tcp
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+    policy: deny
+
+- name: Reload UFW
+  ufw:
+    state: reloaded
