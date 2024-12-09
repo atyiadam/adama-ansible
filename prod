@@ -1,8 +1,14 @@
 [bastion]
 10.10.30.100
 
-[k8s-01]
-server-01.k8s-01.prod.home.adamatyi.com
-server-02.k8s-01.prod.home.adamatyi.com
-server-03.k8s-01.prod.home.adamatyi.com
+[k8s_01_servers]
+server-01.k8s-01.prod.home.adamatyi.com keepalived_priority=200 keepalived_state=MASTER keepalived_peers='["10.10.30.153", "10.10.30.154"]'
+server-02.k8s-01.prod.home.adamatyi.com keepalived_priority=100 keepalived_state=BACKUP keepalived_peers='["10.10.30.152", "10.10.30.154"]'
+server-03.k8s-01.prod.home.adamatyi.com keepalived_priority=50 keepalived_state=BACKUP keepalived_peers='["10.10.30.152", "10.10.30.153"]'
+
+[k8s_01_agents]
 agent-01.k8s-01.prod.home.adamatyi.com
+
+[k8s_01_cluster:children]
+k8s_01_servers
+k8s_01_agents

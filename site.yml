@@ -1,5 +1,31 @@
 ---
-- hosts: k8s-01
+- hosts: k8s_01_cluster
   become: yes
+  vars:
+    # Network CIDRs
+    rke2_server_cidr: "10.10.30.152/30"
+    rke2_agent_cidr: "10.10.30.156/30"
+    rke2_cluster_cidr: "10.10.30.152/29"
+
   roles:
     - ssh-hardening
+    - rke2-core-networking
+    - rke2-cilium-networking
+
+- hosts: k8s_01_servers
+  become: yes
+  vars:
+    # Keepalived settings
+    keepalived_vip: "10.10.30.155"
+    keepalived_interface: "eth0"
+    keepalived_router_id: 50
+    keepalived_temp_pass: "{{ lookup('password', '/dev/null length=8 chars=ascii_letters,digits') }}"
+
+  pre_tasks:
+    - name: Set keepalived auth password
+      set_fact:
+        keepalived_auth_pass: "{{ keepalived_temp_pass }}"
+      run_once: true
+
+  roles:
+    - rke2-server-keepalived

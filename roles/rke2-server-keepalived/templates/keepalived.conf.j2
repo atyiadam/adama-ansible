@@ -1,0 +1,19 @@
+vrrp_instance RKE2_APISERVER {
+    state {{ keepalived_state }}
+    interface {{ keepalived_interface }}
+    virtual_router_id {{ keepalived_router_id }}
+    priority {{ keepalived_priority }}
+    advert_int 1
+    unicast_src_ip {{ ansible_facts['default_ipv4']['address'] }}
+    unicast_peer {
+        {{ keepalived_peers[0] }}
+        {{ keepalived_peers[1] }}
+    }
+    authentication {
+        auth_type PASS
+        auth_pass {{ keepalived_auth_pass }}
+    }
+    virtual_ipaddress {
+        {{ keepalived_vip }}/24
+    }
+}
