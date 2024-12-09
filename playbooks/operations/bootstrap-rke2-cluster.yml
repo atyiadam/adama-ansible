@@ -1,0 +1,70 @@
+---
+- name: Initialize keepalived on k8s-01 servers
+  hosts: "{{ cluster_name }}_servers"
+  become: yes
+  vars:
+    keepalived_vip: "{{ cluster_vip }}"
+    keepalived_interface: "eth0"
+    keepalived_router_id: 50
+    keepalived_temp_pass: "{{ lookup('password', '/dev/null length=8 chars=ascii_letters,digits') }}"
+
+  pre_tasks:
+    - name: Set keepalived auth password
+      set_fact:
+        keepalived_auth_pass: "{{ keepalived_temp_pass }}"
+      run_once: true
+
+  roles:
+    - rke2-server-keepalived
+    
+# First control plane node
+- hosts: "{{ cluster_name }}_init_server"
+  become: true
+  vars:
+    rke2_type: server
+    rke2_is_init_server: true
+    rke2_tls_san: 
+      - "{{ cluster_vip }}"
+    rke2_node_taints:
+      - "CriticalAddonsOnly=true:NoExecute"
+  roles:
+    - bootstrap-rke2-cluster
+
+# Additional control plane nodes
+- hosts: "{{ cluster_name }}_additional_servers"
+  become: true
+  pre_tasks:
+    - name: Wait for init server to be ready
+      wait_for:
+        host: "{{ cluster_vip }}"
+        port: 9345
+        timeout: 300
+      become: false
+      run_once: true
+  vars:
+    rke2_type: server
+    rke2_server_url: "https://{{ cluster_vip }}:9345"
+    rke2_tls_san:
+      - "{{ cluster_vip }}"
+    rke2_node_taints:
+      - "CriticalAddonsOnly=true:NoExecute"
+  roles:
+    - bootstrap-rke2-cluster
+
+# Worker nodes
+- hosts: "{{ cluster_name }}_agents"
+  become: true
+  pre_tasks:
+    - name: Wait for init server to be ready
+      wait_for:
+        host: "{{ cluster_vip }}"
+        port: 9345
+        timeout: 300
+      become: false
+      run_once: true
+  vars:
+    rke2_type: agent
+    rke2_server_url: "https://{{ cluster_vip }}:9345"
+  roles:
+    - bootstrap-rke2-cluster
+

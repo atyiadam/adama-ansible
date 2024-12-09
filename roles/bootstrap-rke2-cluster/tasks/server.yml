@@ -1,0 +1,21 @@
+---
+- name: Include common tasks
+  include_tasks: common.yml
+
+- name: Install RKE2 server
+  shell: INSTALL_RKE2_VERSION={{ rke2_version }} INSTALL_RKE2_CHANNEL={{ rke2_channel }} sh /tmp/rke2-install.sh
+  args:
+    creates: /usr/local/bin/rke2
+
+- name: Enable and start RKE2 server service
+  systemd:
+    name: rke2-server
+    enabled: yes
+    state: started
+  register: rke2_server_start
+
+- name: Wait for RKE2 server to be ready
+  wait_for:
+    path: /var/lib/rancher/rke2/server/node-token
+    state: present
+  when: rke2_server_start.changed

@@ -1,0 +1,20 @@
+{% if not rke2_is_init_server %}
+server: {{ rke2_server_url }}
+{% endif %}
+token: {{ rke2_token }}
+{% if rke2_type == 'server' %}
+cni: {{ rke2_cni }}
+disable-cloud-controller: {{ rke2_disable_cloud_controller | lower }}
+{% if rke2_tls_san | length > 0 %}
+tls-san:
+{% for san in rke2_tls_san %}
+  - {{ san }}
+{% endfor %}
+{% endif %}
+{% if rke2_node_taints | length > 0 %}
+node-taint:
+{% for taint in rke2_node_taints %}
+  - "{{ taint }}"
+{% endfor %}
+{% endif %}
+{% endif %}

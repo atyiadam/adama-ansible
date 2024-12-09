@@ -42,7 +42,7 @@
     - port: '2381'
       proto: tcp
       src: "{{ rke2_server_cidr }}"
-  when: "group_names | select('match', '.*_servers$') | list | length > 0"
+  when: rke2_type == 'server'
   notify: reload ufw
 
 # Common rules for both server and agent nodes

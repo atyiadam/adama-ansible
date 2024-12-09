@@ -10,9 +10,15 @@
     state: enabled
     policy: deny
 
-# NodePort range requires special handling in UFW
-- name: Configure ufw rules for DNS server
+- name: Allow DNS traffic 
   ufw:
     rule: allow
     port: "53"
+  notify: reload ufw
+
+- name: Allow webserver traffic
+  ufw:
+    rule: allow
+    proto: tcp
+    port: "8082"
   notify: reload ufw

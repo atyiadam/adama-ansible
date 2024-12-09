@@ -1,0 +1,8 @@
+---
+- name: Include server tasks
+  include_tasks: server.yml
+  when: rke2_type == "server"
+
+- name: Include agent tasks
+  include_tasks: agent.yml
+  when: rke2_type == "agent"

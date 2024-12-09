@@ -4,13 +4,19 @@ ns1.home.adamatyi.com ansible_host=10.10.30.1
 [bastion]
 bastion.home.adamatyi.com ansible_host=10.10.30.100
 
-[k8s_01_servers]
-server-01.k8s-01.prod.home.adamatyi.com keepalived_priority=200 keepalived_state=MASTER keepalived_peers='["10.10.30.153", "10.10.30.154"]'
-server-02.k8s-01.prod.home.adamatyi.com keepalived_priority=100 keepalived_state=BACKUP keepalived_peers='["10.10.30.152", "10.10.30.154"]'
-server-03.k8s-01.prod.home.adamatyi.com keepalived_priority=50 keepalived_state=BACKUP keepalived_peers='["10.10.30.152", "10.10.30.153"]'
+[k8s_01_init_server]
+server-01.k8s-01.prod.home.adamatyi.com rke2_type=server keepalived_priority=200 keepalived_state=MASTER keepalived_peers='["10.10.30.153", "10.10.30.154"]'
+
+[k8s_01_additional_servers]
+server-02.k8s-01.prod.home.adamatyi.com rke2_type=server keepalived_priority=100 keepalived_state=BACKUP keepalived_peers='["10.10.30.152", "10.10.30.154"]'
+server-03.k8s-01.prod.home.adamatyi.com rke2_type=server keepalived_priority=50 keepalived_state=BACKUP keepalived_peers='["10.10.30.152", "10.10.30.153"]'
+
+[k8s_01_servers:children]
+k8s_01_init_server
+k8s_01_additional_servers
 
 [k8s_01_agents]
-agent-01.k8s-01.prod.home.adamatyi.com
+agent-01.k8s-01.prod.home.adamatyi.com rke2_type=agent 
 
 [k8s_01_cluster:children]
 k8s_01_servers
