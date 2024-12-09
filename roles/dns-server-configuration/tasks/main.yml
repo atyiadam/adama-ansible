@@ -1,0 +1,18 @@
+---
+# Ensure UFW is installed and running
+- name: Ensure UFW is installed
+  apt:
+    name: ufw
+    state: present
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+    policy: deny
+
+# NodePort range requires special handling in UFW
+- name: Configure ufw rules for DNS server
+  ufw:
+    rule: allow
+    port: "53"
+  notify: reload ufw

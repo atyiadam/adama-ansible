@@ -1,0 +1,6 @@
+---
+- name: Configure DNS server 
+  hosts: dns-server 
+  become: yes
+  roles:
+    - dns-server-configuration

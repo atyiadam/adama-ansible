@@ -1,0 +1,6 @@
+---
+- name: SSH hardening hosts for bastion access
+  hosts: all,!bastion
+  become: yes
+  roles:
+    - ssh-hardening-for-non-bastion-hosts

@@ -17,6 +17,7 @@
     port: 22
     proto: tcp
     delete: yes
+  notify: reload ufw 
   
 - name: Allow SSH only from bastion
   ufw:
@@ -24,12 +25,11 @@
     from_ip: 10.10.30.100
     to_port: 22
     proto: tcp
+  notify: reload ufw 
 
 - name: Enable UFW
   ufw:
     state: enabled
     policy: deny
+  notify: reload ufw 
 
-- name: Reload UFW
-  ufw:
-    state: reloaded

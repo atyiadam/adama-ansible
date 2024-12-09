@@ -1,18 +1,6 @@
 ---
-- hosts: k8s_01_cluster
-  become: yes
-  vars:
-    # Network CIDRs
-    rke2_server_cidr: "10.10.30.152/30"
-    rke2_agent_cidr: "10.10.30.156/30"
-    rke2_cluster_cidr: "10.10.30.152/29"
-
-  roles:
-    - ssh-hardening
-    - rke2-core-networking
-    - rke2-cilium-networking
-
-- hosts: k8s_01_servers
+- name: Initialize keepalived on k8s-01 servers
+  hosts: k8s_01_servers
   become: yes
   vars:
     # Keepalived settings

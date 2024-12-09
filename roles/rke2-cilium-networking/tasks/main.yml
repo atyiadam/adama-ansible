@@ -10,14 +10,6 @@
     state: enabled
     policy: deny
 
-# Configure Cilium-specific rules
-
-# ICMP for health checks
-# - name: Configure ICMP for Cilium CNI
-#   command: "ufw allow from {{ rke2_cluster_cidr }} proto icmp"
-#   changed_when: false
-#   notify: reload ufw
-  
 - name: Configure UFW rules for Cilium CNI
   ufw:
     rule: allow

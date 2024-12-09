@@ -1,0 +1,11 @@
+## rke2-server-keepalived is operational, thus should be in /operations
+---
+- name: Base SSH Configuration
+  import_playbook: ssh/ssh-hardening-for-non-bastion-hosts.yml
+
+- name: DNS server configuration
+  import_playbook: dns/dns-server-configuration.yml
+
+- name: k8s-01 RKE2 networking configuration
+  import_playbook: k8s/k8s-01-networking-configuration.yml
+
