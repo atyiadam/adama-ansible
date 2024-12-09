@@ -1,4 +1,3 @@
-## rke2-server-keepalived is operational, thus should be in /operations
 ---
 - name: Base SSH Configuration
   import_playbook: ssh/ssh-hardening-for-non-bastion-hosts.yml
