@@ -4,6 +4,9 @@ ns1.home.adamatyi.com ansible_host=10.10.30.1
 [bastion]
 bastion.home.adamatyi.com ansible_host=10.10.30.100
 
+[dockerhost]
+dockerhost.home.adamatyi.com ansible_host=10.10.30.101
+
 [k8s_01_init_server]
 server-01.k8s-01.prod.home.adamatyi.com rke2_type=server keepalived_priority=200 keepalived_state=MASTER keepalived_peers='["10.10.30.153", "10.10.30.154"]'
 
