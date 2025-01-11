@@ -4,6 +4,9 @@ ns1.home.adamatyi.com ansible_host=10.10.30.1
 [bastion]
 bastion.home.adamatyi.com ansible_host=10.10.30.100
 
+[loadbalancers]
+haproxy-1.home.adamatyi.com ansible_host=10.10.30.110
+
 [dockerhost]
 dockerhost.home.adamatyi.com ansible_host=10.10.30.101
 

@@ -1,0 +1,27 @@
+[Unit]
+Description=HAProxy Load Balancer
+Documentation=man:haproxy(1)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+User=haproxy
+Group=haproxy
+Environment="CONFIG=/etc/haproxy/haproxy.cfg" "PIDFILE=/run/haproxy.pid"
+ExecStartPre=/usr/sbin/haproxy -f $CONFIG -c -q
+ExecStart=/usr/sbin/haproxy -Ws -f $CONFIG -p $PIDFILE
+ExecReload=/usr/sbin/haproxy -Ws -f $CONFIG -c -q
+ExecReload=/bin/kill -USR2 $MAINPID
+SuccessExitStatus=143
+KillMode=mixed
+Restart=always
+
+# Sandboxing options to harden security
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

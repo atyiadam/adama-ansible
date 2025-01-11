@@ -1,0 +1,8 @@
+#!/bin/bash
+cat /etc/letsencrypt/live/{{ certbot_domain }}/fullchain.pem \
+    /etc/letsencrypt/live/{{ certbot_domain }}/privkey.pem \
+    > {{ combined_cert }}
+echo "Combined cert updated at {{ combined_cert }}"
+echo "Reloading HAProxy"
+systemctl reload haproxy
+echo "HAProxy reloaded"

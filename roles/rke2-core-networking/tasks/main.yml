@@ -23,6 +23,11 @@
       proto: tcp
       src: "{{ rke2_cluster_cidr }}"
     
+    # Kubernetes API - Accept from trusted network
+    - port: '6443'
+      proto: tcp
+      src: "{{ trusted_network }}"
+      
     # RKE2 supervisor API - Accept from agent nodes
     - port: '9345'
       proto: tcp

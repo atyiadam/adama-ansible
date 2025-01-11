@@ -1,0 +1,85 @@
+---
+- name: Create SA group
+  group:
+    name: "{{ lb_service_account }}"
+    system: yes
+    state: present
+
+- name: Create SA user
+  user:
+    name: "{{ lb_service_account }}"
+    system: yes
+    group: "{{ lb_service_account }}"
+    shell: /sbin/nologin
+    home: "/var/lib/{{ lb_service_account }}"
+    create_home: no
+    state: present
+
+- name: Install required packages
+  apt:
+    name:
+      - certbot
+      - python3-certbot-dns-cloudflare
+    state: present
+    update_cache: yes
+
+- name: Create letsencrypt directory
+  file:
+    path: "/etc/letsencrypt"
+    state: directory
+    mode: '0755'
+
+- name: Create certificates directory
+  file:
+    path: "{{ cert_dir }}"
+    state: directory
+    owner: root
+    group: "{{ lb_service_account }}"
+    mode: '0750'
+
+- name: Create renewal hooks directory
+  file:
+    path: "/etc/letsencrypt/renewal-hooks/post"
+    state: directory
+    mode: '0755'
+
+- name: Configure Cloudflare credentials
+  template:
+    src: cloudflare.ini.j2
+    dest: /etc/letsencrypt/cloudflare.ini
+    mode: '0600'
+
+- name: Request certificate using Certbot
+  command: >
+    certbot certonly --dns-cloudflare 
+    --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini 
+    -d {{ certbot_domain }} 
+    -d *.{{ certbot_domain }} 
+    --email {{ certbot_email }} 
+    --agree-tos 
+    --non-interactive
+  args:
+    creates: "/etc/letsencrypt/live/{{ certbot_domain }}"
+
+- name: Create post-renewal hook
+  template:
+    src: renewal-hook.sh.j2
+    dest: /etc/letsencrypt/renewal-hooks/post/create_combined_cert.sh
+    mode: '0755'
+
+- name: Create initial combined certificate
+  block:
+    - name: Combine certificates
+      shell: |
+        cat /etc/letsencrypt/live/{{ certbot_domain }}/fullchain.pem \
+            /etc/letsencrypt/live/{{ certbot_domain }}/privkey.pem \
+            > {{ combined_cert }}
+      args:
+        creates: "{{ combined_cert }}"
+
+- name: Set proper permissions on combined cert
+  file:
+    path: "{{ combined_cert }}"
+    owner: root
+    group: "{{ lb_service_account }}"
+    mode: '0640'

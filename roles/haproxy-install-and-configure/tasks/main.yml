@@ -1,0 +1,56 @@
+---
+- name: Create haproxy group
+  group:
+    name: haproxy
+    system: yes
+    state: present
+
+- name: Create haproxy user
+  user:
+    name: haproxy
+    system: yes
+    group: haproxy
+    shell: /sbin/nologin
+    home: /var/lib/haproxy
+    create_home: no
+    state: present
+
+- name: Install HAProxy
+  package:
+    name: haproxy
+    state: present
+
+- name: Create required directories
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { path: '/var/empty', owner: 'root', group: 'root', mode: '0000' }
+    - { path: '/var/run/haproxy', owner: 'haproxy', group: 'haproxy', mode: '0750' }
+    - { path: '/etc/haproxy', owner: 'root', group: 'root', mode: '0755' }
+    - { path: '/var/lib/haproxy', owner: 'haproxy', group: 'haproxy', mode: '0750' }
+
+- name: Configure HAProxy
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    owner: haproxy
+    group: haproxy
+    mode: '0640'
+    validate: 'haproxy -c -f %s'
+  notify: reload haproxy
+
+- name: Allow HTTPS traffic
+  ufw:
+    rule: allow
+    port: '443'
+    proto: tcp
+
+- name: Start and enable HAProxy
+  service:
+    name: haproxy
+    state: started
+    enabled: true

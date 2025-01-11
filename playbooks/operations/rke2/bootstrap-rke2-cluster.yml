@@ -15,7 +15,7 @@
       run_once: true
 
   roles:
-    - rke2-server-keepalived
+    - keepalived-install-and-configure
     
 # First control plane node
 - hosts: "{{ cluster_name }}_init_server"
@@ -25,6 +25,7 @@
     rke2_is_init_server: true
     rke2_tls_san: 
       - "{{ cluster_vip }}"
+      - "{{ kubernetes_api_fqdn }}"
     rke2_node_taints:
       - "CriticalAddonsOnly=true:NoExecute"
   roles:

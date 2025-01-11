@@ -1,0 +1,28 @@
+---
+- hosts: loadbalancers
+  become: true
+  vars:
+    certbot_domain: "home.adamatyi.com"
+    certbot_email: "atyiadam@gmail.com"
+    cloudflare_token: "{{ lookup('env', 'CLOUDFLARE_TOKEN') }}"
+    cert_dir: "/etc/haproxy/certs"
+    combined_cert: "{{ cert_dir }}/combinedcert.pem"
+    lb_service_account: "haproxy"
+  roles:
+    - certbot-install-and-configure
+
+- hosts: loadbalancers
+  become: true
+  vars:
+    cert_dir: "/etc/haproxy/certs"
+    combined_cert: "{{ cert_dir }}/combinedcert.pem"
+    haproxy_https_backends:
+      - name: proxmox
+        domain: proxmox.home.adamatyi.com
+        servers:
+          - name: proxmox_pve_01
+            address: 10.10.20.10
+            port: 8006
+  roles:
+    - haproxy-install-and-configure
+
