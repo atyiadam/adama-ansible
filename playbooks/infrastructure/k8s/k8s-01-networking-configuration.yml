@@ -4,9 +4,9 @@
   become: yes
   vars:
     # Network CIDRs
-    rke2_server_cidr: "10.10.30.152/29"
-    rke2_agent_cidr: "10.10.30.160/29"
-    rke2_cluster_cidr: "10.10.30.152/28"
+    rke2_server_cidr: "10.10.30.144/29"
+    rke2_agent_cidr: "10.10.30.152/29"
+    rke2_cluster_cidr: "10.10.30.144/28"
     trusted_network: "10.10.30.0/24"
 
   roles:

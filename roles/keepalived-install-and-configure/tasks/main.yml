@@ -11,12 +11,16 @@
     state: started
     enabled: yes
 
+- name: Create keepalived script
+  template:
+    src: check_apiserver.sh.j2
+    dest: /etc/keepalived/check_apiserver.sh
+    mode: '0744'
+
 - name: Create keepalived config
   template:
     src: keepalived.conf.j2
     dest: /etc/keepalived/keepalived.conf
-    owner: root
-    group: root
     mode: '0644'
   notify: restart keepalived
 

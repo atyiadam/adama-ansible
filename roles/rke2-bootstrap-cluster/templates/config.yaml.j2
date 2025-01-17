@@ -17,19 +17,10 @@ node-taint:
   - "{{ taint }}"
 {% endfor %}
 {% endif %}
+kube-apiserver-arg:
+- oidc-issuer-url=https://keycloak.home.adamatyi.com/realms/k8s-01-prod
+- oidc-client-id=kubernetes
+- oidc-username-claim=email
+- oidc-groups-claim=groups
+- oidc-groups-prefix=
 {% endif %}
-etcd-arg:
-  - election-timeout=10000
-  - heartbeat-interval=1000
-kube-controller-manager-arg:
-  - "leader-elect-lease-duration=60s"
-  - "leader-elect-renew-deadline=40s"
-  - "leader-elect-retry-period=5s"
-kube-scheduler-arg:
-  - "leader-elect-lease-duration=60s"
-  - "leader-elect-renew-deadline=40s"
-  - "leader-elect-retry-period=5s"
-kube-cloud-controller-manager-arg:
-  - "leader-elect-lease-duration=60s"
-  - "leader-elect-renew-deadline=40s"
-  - "leader-elect-retry-period=5s"

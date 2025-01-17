@@ -1,3 +1,11 @@
+vrrp_script check_apiserver {
+    script "/etc/keepalived/check_apiserver.sh"
+    interval 3
+    weight -2
+    fall 10
+    rise 2
+}
+
 vrrp_instance INSTANCE {
     state {{ keepalived_state }}
     interface {{ keepalived_interface }}
@@ -15,5 +23,8 @@ vrrp_instance INSTANCE {
     }
     virtual_ipaddress {
         {{ keepalived_vip }}/24
+    }
+    track_script {
+        check_apiserver
     }
 }

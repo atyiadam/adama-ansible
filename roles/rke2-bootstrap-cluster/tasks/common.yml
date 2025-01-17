@@ -16,3 +16,25 @@
     url: "{{ rke2_install_script_url }}"
     dest: /tmp/rke2-install.sh
     mode: '0700'
+
+# DNS config
+- name: Disable and stop systemd-resolved
+  systemd:
+    name: systemd-resolved
+    state: stopped
+    enabled: false
+    masked: true
+
+- name: Remove resolv.conf symlink
+  file:
+    path: /etc/resolv.conf
+    state: absent
+    force: true 
+
+- name: Create new resolv.conf
+  copy:
+    dest: /etc/resolv.conf
+    content: |
+      nameserver {{ dns_server_ip }}
+      options edns0 trust-ad
+    mode: '0644'

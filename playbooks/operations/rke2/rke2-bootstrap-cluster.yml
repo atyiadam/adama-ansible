@@ -1,22 +1,4 @@
 ---
-- name: Initialize keepalived on k8s-01 servers
-  hosts: "{{ cluster_name }}_servers"
-  become: yes
-  vars:
-    keepalived_vip: "{{ cluster_vip }}"
-    keepalived_interface: "eth0"
-    keepalived_router_id: 50
-    keepalived_temp_pass: "{{ lookup('password', '/dev/null length=8 chars=ascii_letters,digits') }}"
-
-  pre_tasks:
-    - name: Set keepalived auth password
-      set_fact:
-        keepalived_auth_pass: "{{ keepalived_temp_pass }}"
-      run_once: true
-
-  roles:
-    - keepalived-install-and-configure
-    
 # First control plane node
 - hosts: "{{ cluster_name }}_init_server"
   become: true
@@ -30,6 +12,32 @@
       - "CriticalAddonsOnly=true:NoExecute"
   roles:
     - rke2-bootstrap-cluster
+
+- hosts: "{{ cluster_name }}_init_server"
+  become: true
+  vars:
+    rke2_type: server
+  roles:
+    - rke2-fetch-ca-pem
+    
+- name: Initialize keepalived on k8s-01 servers
+  hosts: "{{ cluster_name }}_servers"
+  become: yes
+  vars:
+    keepalived_vip: "{{ cluster_vip }}"
+    keepalived_service: "kubernetes"
+    keepalived_interface: "eth0"
+    keepalived_router_id: 50
+    keepalived_temp_pass: "{{ lookup('password', '/dev/null length=8 chars=ascii_letters,digits') }}"
+
+  pre_tasks:
+    - name: Set keepalived auth password
+      set_fact:
+        keepalived_auth_pass: "{{ keepalived_temp_pass }}"
+      run_once: true
+
+  roles:
+    - keepalived-install-and-configure
 
 # Additional control plane nodes
 - hosts: "{{ cluster_name }}_additional_servers"

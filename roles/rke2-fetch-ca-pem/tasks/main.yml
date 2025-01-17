@@ -1,0 +1,21 @@
+---
+- name: Read certificate file
+  slurp:
+    src: "{{ server_ca_crt_path }}"
+  register: ca_cert_base64_encoded
+
+- name: Ensure .kube directory exists
+  file:
+    path: "{{ kube_dir_path }}"
+    state: directory
+  delegate_to: localhost
+  become: false
+
+- name: Write CA certificate to file
+  copy:
+    content: "{{ ca_cert_base64_encoded.content | b64decode }}"
+    dest: "{{ kube_dir_path }}/{{ cluster_name }}-{{ cluster_env }}-ca.pem"
+    mode: '0600'
+  delegate_to: localhost
+  become: false
+

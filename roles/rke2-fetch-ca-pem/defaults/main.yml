@@ -1,0 +1,3 @@
+---
+server_ca_crt_path: "/var/lib/rancher/rke2/server/tls/server-ca.crt"
+kube_dir_path: "/home/adama/.kube"
