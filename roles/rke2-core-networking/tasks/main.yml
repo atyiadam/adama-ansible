@@ -72,3 +72,21 @@
     proto: tcp
     src: "{{ rke2_cluster_cidr }}"
   notify: reload ufw
+
+# Allow HAProxy to access NodePorts
+- name: Configure NodePort range for HAProxy
+  ufw:
+    rule: allow
+    port: "30000:32767"
+    proto: tcp
+    src: "{{ loadbalancer_ip }}"
+  notify: reload ufw
+
+- name: Configure NodePort range for UDP traffic
+  ufw:
+    rule: allow
+    port: "30000:32767"
+    proto: udp
+    src: "{{ loadbalancer_ip }}"
+  notify: reload ufw
+  

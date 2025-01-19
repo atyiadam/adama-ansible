@@ -23,6 +23,14 @@
           - name: proxmox_pve_01
             address: 10.10.20.10
             port: 8006
+    haproxy_http_backends:
+      - name: k8s-01-prod-argocd
+        domain: argocd-k8s-01-prod.home.adamatyi.com
+        server_prefix: argocd
+        server_ip_prefix: 10.10.30
+        server_start: 152
+        server_end: 159
+        port: 30080
   roles:
     - haproxy-install-and-configure
 

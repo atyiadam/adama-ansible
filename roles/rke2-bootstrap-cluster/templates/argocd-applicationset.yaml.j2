@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: core-infrastructure
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/atyiadam/adama-k8s-core
+      revision: HEAD
+      files:
+      - path: "values/{{ cluster_env }}/{{ cluster_name | replace('_', '-') }}/*/*.yaml"
+  template:
+    metadata:
+      name: '{% raw %}{{path.basename}}{% endraw %}'
+      namespace: argocd
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/atyiadam/adama-k8s-core
+        targetRevision: HEAD
+        path: 'charts/{% raw %}{{path.basename}}{% endraw %}'
+        helm:
+          valueFiles:
+            - '../../values/{{ cluster_env }}/{{ cluster_name | replace('_', '-') }}/{% raw %}{{path.basename}}{% endraw %}/values.yaml'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{% raw %}{{path.basenameNormalized}}{% endraw %}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

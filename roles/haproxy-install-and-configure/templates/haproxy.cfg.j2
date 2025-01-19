@@ -58,8 +58,8 @@ backend {{ backend.name }}
 {% if haproxy_http_backends is defined and haproxy_http_backends %}
 {% for backend in haproxy_http_backends %}
 backend {{ backend.name }}
-{% for server in backend.servers %}
-    server {{ server.name }} {{ server.address }}:{{ server.port }}
+{% for i in range(backend.server_start, backend.server_end + 1) %}
+    server {{ backend.server_prefix }}{{ i }} {{ backend.server_ip_prefix }}.{{ i }}:{{ backend.port }} check
 {% endfor %}
 {% endfor %}
 {% endif %}

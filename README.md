@@ -21,3 +21,4 @@ $ ansible-playbook -i prod playbooks/operations/rke2/rke2-bootstrap-cluster.yml 
 -e kubernetes_api_fqdn="kubernetes-api.k8s-01.prod.home.adamatyi.com" \
 -e rke2_token="your-secure-token" 
 ```
+5. Create DNA A record for argocd

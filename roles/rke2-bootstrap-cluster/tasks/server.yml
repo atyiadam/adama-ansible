@@ -38,6 +38,24 @@
     dest: "{{ rke2_autodeploy_manifests_dir }}/keycloak-admin-clusterrolebinding.yaml"
     mode: '0600'
 
+- name: Create ArgoCD HelmChart
+  copy:
+    src: "files/argocd.yaml"
+    dest: "{{ rke2_autodeploy_manifests_dir }}/argocd.yaml"
+    mode: '0600'
+
+- name: Create ArgoCD repo configs
+  copy:
+    src: "files/argocd-base-repos.yaml"
+    dest: "{{ rke2_autodeploy_manifests_dir }}/argocd-base-repos.yaml"
+    mode: '0600'
+
+- name: Create ArgoCD ApplicationSet config
+  template:
+    src: "argocd-applicationset.yaml.j2"
+    dest: "{{ rke2_autodeploy_manifests_dir }}/argocd-applicationset.yaml"
+    mode: '0600'
+
 - name: Enable and start RKE2 server service
   systemd:
     name: rke2-server

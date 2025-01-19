@@ -2,6 +2,11 @@
 - name: Include common tasks
   include_tasks: common.yml
 
+- name: Ensure nfs-common is installed
+  apt:
+    name: nfs-common
+    state: present
+
 - name: Install RKE2 agent
   shell: INSTALL_RKE2_TYPE="agent" INSTALL_RKE2_VERSION={{ rke2_version }} INSTALL_RKE2_CHANNEL={{ rke2_channel }} sh /tmp/rke2-install.sh
   args:
