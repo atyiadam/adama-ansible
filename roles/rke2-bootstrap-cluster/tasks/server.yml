@@ -50,10 +50,16 @@
     dest: "{{ rke2_autodeploy_manifests_dir }}/argocd-base-repos.yaml"
     mode: '0600'
 
-- name: Create ArgoCD ApplicationSet config
+- name: Create ArgoCD core-infrastructure ApplicationSet config
   template:
-    src: "argocd-applicationset.yaml.j2"
-    dest: "{{ rke2_autodeploy_manifests_dir }}/argocd-applicationset.yaml"
+    src: "argocd-applicationset-core-infrastructure.yaml.j2"
+    dest: "{{ rke2_autodeploy_manifests_dir }}/argocd-applicationset-core-infrastructure.yaml"
+    mode: '0600'
+
+- name: Create ArgoCD apps ApplicationSet config
+  template:
+    src: "argocd-applicationset-apps.yaml.j2"
+    dest: "{{ rke2_autodeploy_manifests_dir }}/argocd-applicationset-apps.yaml"
     mode: '0600'
 
 - name: Enable and start RKE2 server service

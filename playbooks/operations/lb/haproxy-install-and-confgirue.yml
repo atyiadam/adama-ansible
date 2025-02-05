@@ -31,6 +31,13 @@
         server_start: 152
         server_end: 159
         port: 30080
+      - name: jellyfin
+        domain: jellyfin.home.adamatyi.com
+        server_prefix: jellyfin
+        server_ip_prefix: 10.10.30
+        server_start: 152
+        server_end: 159
+        port: 30081
   roles:
     - haproxy-install-and-configure
 

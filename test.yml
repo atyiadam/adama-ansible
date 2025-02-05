@@ -1,0 +1,5 @@
+- hosts: server-01.k8s-01.prod.home.adamatyi.com
+  become: true
+  roles:
+    - rke2-fetch-ca-pem
+
