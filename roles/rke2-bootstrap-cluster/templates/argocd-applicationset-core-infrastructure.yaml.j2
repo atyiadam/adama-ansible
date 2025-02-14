@@ -22,7 +22,7 @@ spec:
         path: 'charts/{% raw %}{{path.basename}}{% endraw %}'
         helm:
           valueFiles:
-            - '../../values/{{ cluster_env }}/{{ cluster_name | replace('_', '-') }}/{% raw %}{{path[3]}}/{{path[4]}}{% endraw %}/values.yaml'
+            - '/values/{{ cluster_env }}/{{ cluster_name | replace('_', '-') }}/{% raw %}{{path[3]}}/{{path[4]}}{% endraw %}/values.yaml'
       destination:
         server: https://kubernetes.default.svc
         namespace: '{% raw %}{{path[3]}}{% endraw %}'
