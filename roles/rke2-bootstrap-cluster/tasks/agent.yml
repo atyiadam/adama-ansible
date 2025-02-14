@@ -12,6 +12,25 @@
   args:
     creates: /usr/local/bin/rke2
 
+ # Longhorn related tasks
+- name: Ensure iscsi_tcp kernel module is loaded
+  modprobe:
+    name: iscsi_tcp
+    state: present
+
+- name: Ensure iscsi_tcp is loaded on boot
+  lineinfile:
+    path: /etc/modules-load.d/iscsi_tcp.conf
+    line: "iscsi_tcp"
+    create: yes
+    state: present
+
+- name: Stop and disable multipathd service
+  service:
+    name: multipathd
+    state: stopped
+    enabled: no
+
 - name: Enable and start RKE2 agent service
   systemd:
     name: rke2-agent

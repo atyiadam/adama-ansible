@@ -23,6 +23,7 @@ k8s_01_additional_servers
 
 [k8s_01_agents]
 agent-01.k8s-01.prod.home.adamatyi.com rke2_type=agent 
+agent-02.k8s-01.prod.home.adamatyi.com rke2_type=agent 
 
 [k8s_01_cluster:children]
 k8s_01_servers

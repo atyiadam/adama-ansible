@@ -15,7 +15,7 @@
     rule: allow
     src: "{{ item.src }}"
     port: "{{ item.port | default(omit) }}"
-    proto: "{{ item.proto }}"
+    proto: "{{ item.proto | default(omit) }}"
   loop:
     # Cilium health checks
     - port: '4240'
@@ -26,5 +26,12 @@
     - port: '8472'
       proto: udp
       src: "{{ rke2_cluster_cidr }}"
+
+    # Needed for eg. metrics server to scrape its own host
+    - src: "{{ cilium_rke2_service_cidr }}"
+      comment: "Allow Kubernetes service CIDR to talk to node"
+
+    - src: "{{ cilium_rke2_cluster_cidr }}"
+      comment: "Allow Kubernetes cluster CIDR to talk to node"
   notify: reload ufw
 

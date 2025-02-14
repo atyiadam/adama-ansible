@@ -9,7 +9,6 @@
     rke2_cluster_cidr: "10.10.30.144/28"
     trusted_network: "10.10.30.0/24"
     loadbalancer_ip: "10.10.30.110/32"
-
   roles:
     - rke2-core-networking
     - rke2-cilium-networking
