@@ -7,7 +7,7 @@ spec:
   generators:
   - git:
       repoURL: https://github.com/atyiadam/adama-k8s-apps
-      revision: HEAD
+      revision: main
       files:
       - path: "overlays/{{ cluster_env }}/{{ cluster_name | replace('_', '-') }}/*/*/kustomization.yaml"
   template:
@@ -18,14 +18,14 @@ spec:
       project: default
       source:
         repoURL: https://github.com/atyiadam/adama-k8s-apps
-        targetRevision: HEAD
+        targetRevision: main
         path: 'overlays/{{ cluster_env }}/{{ cluster_name | replace('_', '-') }}/{% raw %}{{path[3]}}/{{path.basename}}{% endraw %}'
       destination:
         server: https://kubernetes.default.svc
         namespace: '{% raw %}{{path[3]}}{% endraw %}'
       syncPolicy:
         automated:
-          prune: true
+          prune: false
           selfHeal: true
         syncOptions:
           - CreateNamespace=true

@@ -55,6 +55,7 @@
     rke2_server_url: "https://{{ cluster_vip }}:9345"
     rke2_tls_san:
       - "{{ cluster_vip }}"
+      - "{{ kubernetes_api_fqdn }}"
     rke2_node_taints:
       - "CriticalAddonsOnly=true:NoExecute"
   roles:
