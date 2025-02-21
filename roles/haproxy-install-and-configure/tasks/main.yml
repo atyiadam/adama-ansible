@@ -49,6 +49,12 @@
     port: '443'
     proto: tcp
 
+- name: Allow HTTP traffic
+  ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+
 - name: Start and enable HAProxy
   service:
     name: haproxy

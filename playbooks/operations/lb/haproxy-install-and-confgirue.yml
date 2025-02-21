@@ -38,6 +38,34 @@
         server_start: 152
         server_end: 159
         port: 30081
+      - name: prowlarr
+        domain: prowlarr.home.adamatyi.com
+        server_prefix: prowlarr
+        server_ip_prefix: 10.10.30
+        server_start: 152
+        server_end: 159
+        port: 30083
+      - name: radarr
+        domain: radarr.home.adamatyi.com
+        server_prefix: radarr
+        server_ip_prefix: 10.10.30
+        server_start: 152
+        server_end: 159
+        port: 30082
+      - name: sonarr
+        domain: sonarr.home.adamatyi.com
+        server_prefix: sonarr
+        server_ip_prefix: 10.10.30
+        server_start: 152
+        server_end: 159
+        port: 30084
+      - name: qbittorrent
+        domain: qbittorrent.home.adamatyi.com
+        server_prefix: qbittorrent
+        server_ip_prefix: 10.10.30
+        server_start: 2
+        server_end: 2
+        port: 8080
   roles:
     - haproxy-install-and-configure
 
