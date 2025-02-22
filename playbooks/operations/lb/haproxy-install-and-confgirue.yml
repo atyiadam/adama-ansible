@@ -17,6 +17,9 @@
     cert_dir: "/etc/haproxy/certs"
     combined_cert: "{{ cert_dir }}/combinedcert.pem"
     haproxy_https_backends:
+      #===============================================================================
+      # Proxmox
+      #===============================================================================
       - name: proxmox
         domain: proxmox.home.adamatyi.com
         servers:
@@ -24,6 +27,19 @@
             address: 10.10.20.10
             port: 8006
     haproxy_http_backends:
+      #===============================================================================
+      # Synology
+      #===============================================================================
+      - name: qbittorrent
+        domain: qbittorrent.home.adamatyi.com
+        server_prefix: qbittorrent
+        server_ip_prefix: 10.10.30
+        server_start: 2
+        server_end: 2
+        port: 8080
+      #===============================================================================
+      # k8s-01.prod
+      #===============================================================================
       - name: k8s-01-prod-argocd
         domain: argocd-k8s-01-prod.home.adamatyi.com
         server_prefix: argocd
@@ -59,13 +75,13 @@
         server_start: 152
         server_end: 159
         port: 30084
-      - name: qbittorrent
-        domain: qbittorrent.home.adamatyi.com
-        server_prefix: qbittorrent
+      - name: k8s-01-prod-longhorn
+        domain: longhorn-k8s-01-prod.home.adamatyi.com
+        server_prefix: longhorn
         server_ip_prefix: 10.10.30
-        server_start: 2
-        server_end: 2
-        port: 8080
+        server_start: 152
+        server_end: 159
+        port: 30085
   roles:
     - haproxy-install-and-configure
 

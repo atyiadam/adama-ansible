@@ -62,6 +62,12 @@
     dest: "{{ rke2_autodeploy_manifests_dir }}/argocd-applicationset-apps.yaml"
     mode: '0600'
 
+- name: Create ArgoCD apps ApplicationSet config
+  template:
+    src: "rke2-cilium-config.yaml.j2"
+    dest: "{{ rke2_autodeploy_manifests_dir }}/rke2-cilium-config.yaml"
+    mode: '0600'
+
 - name: Enable and start RKE2 server service
   systemd:
     name: rke2-server
