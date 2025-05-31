@@ -9,17 +9,17 @@ This repository follows the [Sample directory layout](https://docs.ansible.com/a
 1. First provision the servers & agents via Terraform
 2. Add new hosts to inventory
 3. Add new cluster to `/playbooks/infrastructure/k8s/k8s-01-networking-configuration.yml`
-3. Generic (non-k8s) server config:
+4. Generic (non-k8s) server config:
 ```
 $ ansible-playbook -i <ENV> playbooks/infrastructure/site.yml --limit <INVENTORY_CLUSTER_NAME>
 ```
-4. RKE2 bootstrap with keepalived
+5. RKE2 bootstrap with keepalived
 ```
-$ ansible-playbook -i prod playbooks/operations/rke2/rke2-configure-cluster.yml \
--e cluster_name="k8s_01" \
--e cluster_env="prod" \
--e cluster_vip="10.10.30.147" \
--e kubernetes_api_fqdn="kubernetes-api.k8s-01.prod.home.adamatyi.com" \
--e rke2_token="4Srvzff43AffMusczJzy" 
+$ ansible-playbook -i <CLUSTER_ENV> playbooks/operations/rke2/rke2-configure-cluster.yml \
+-e cluster_name="<CLUSTER_NAME>" \
+-e cluster_env="<CLUSTER_ENV>" \
+-e cluster_vip="<CLUSTER_VIP>" \
+-e kubernetes_api_fqdn="<K8S_API_FQDN>" \
+-e rke2_token="<RKE2_TOKEN>" 
 ```
-5. Create DNS A record for argocd
+6. Create DNS A record for argocd
