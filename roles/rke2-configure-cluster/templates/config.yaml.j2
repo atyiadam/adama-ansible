@@ -19,9 +19,13 @@ node-taint:
 {% endfor %}
 {% endif %}
 kube-apiserver-arg:
-- oidc-issuer-url=https://keycloak.home.adamatyi.com/realms/k8s-01-prod
-- oidc-client-id=kubernetes
+- oidc-issuer-url=https://keycloak.home.adamatyi.com/realms/kubernetes
+- oidc-client-id={{ cluster_name | replace('_', '-') }}-{{ cluster_env }}
 - oidc-username-claim=email
 - oidc-groups-claim=groups
 - oidc-groups-prefix=
+{% endif %}
+{% if rke2_type == 'agent' %}
+node-label:
+  - node.longhorn.io/create-default-disk=true
 {% endif %}

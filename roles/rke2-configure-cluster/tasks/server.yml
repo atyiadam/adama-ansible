@@ -1,8 +1,22 @@
 ---
-- name: Create a filesystem on /dev/sdb
+- name: Find the disk for etcd
+  shell: |
+    lsblk -n -o NAME,SIZE | grep -v -e "-" | grep "25G" | awk '{print $1}'
+  register: etcd_disk_result
+  changed_when: false
+
+- name: Set etcd disk path 
+  set_fact:
+    etcd_disk_path: "/dev/{{ etcd_disk_result.stdout }}"
+  when: etcd_disk_result.stdout != ""
+
+- name: Create filesystem on etcd disk if needed
   filesystem:
     fstype: ext4
-    dev: /dev/sdb
+    dev: "{{ etcd_disk_path }}"
+  when: etcd_disk_path is defined
+  register: format_result
+  failed_when: false
 
 - name: Create RKE2 etcd directory
   file:
@@ -37,36 +51,42 @@
     src: "keycloak-admin-clusterrolebinding.yaml.j2"
     dest: "{{ rke2_autodeploy_manifests_dir }}/keycloak-admin-clusterrolebinding.yaml"
     mode: '0600'
+  when: is_init_server | default(false) | bool
 
 - name: Create ArgoCD HelmChart
   copy:
     src: "files/argocd.yaml"
     dest: "{{ rke2_autodeploy_manifests_dir }}/argocd.yaml"
     mode: '0600'
+  when: is_init_server | default(false) | bool
 
 - name: Create ArgoCD repo configs
   copy:
     src: "files/argocd-base-repos.yaml"
     dest: "{{ rke2_autodeploy_manifests_dir }}/argocd-base-repos.yaml"
     mode: '0600'
+  when: is_init_server | default(false) | bool
 
 - name: Create ArgoCD core-infrastructure ApplicationSet config
   template:
     src: "argocd-applicationset-core-infrastructure.yaml.j2"
     dest: "{{ rke2_autodeploy_manifests_dir }}/argocd-applicationset-core-infrastructure.yaml"
     mode: '0600'
+  when: is_init_server | default(false) | bool
 
 - name: Create ArgoCD apps ApplicationSet config
   template:
     src: "argocd-applicationset-apps.yaml.j2"
     dest: "{{ rke2_autodeploy_manifests_dir }}/argocd-applicationset-apps.yaml"
     mode: '0600'
+  when: is_init_server | default(false) | bool
 
 - name: Create ArgoCD apps ApplicationSet config
   template:
     src: "rke2-cilium-config.yaml.j2"
     dest: "{{ rke2_autodeploy_manifests_dir }}/rke2-cilium-config.yaml"
     mode: '0600'
+  when: is_init_server | default(false) | bool
 
 - name: Enable and start RKE2 server service
   systemd:

@@ -26,10 +26,36 @@
     state: present
 
 - name: Stop and disable multipathd service
-  service:
+  systemd:
     name: multipathd
     state: stopped
     enabled: no
+    daemon_reload: yes
+
+- name: Ensure multipathd is fully terminated
+  command: "pkill -9 multipathd || true"
+  register: pkill_result
+  changed_when: pkill_result.rc == 0
+  failed_when: false  # Don't fail if process is already gone
+
+- name: Ensure dm_crypt kernel module is loaded
+  modprobe:
+    name: dm_crypt
+    state: present
+
+- name: Ensure dm_crypt is loaded on boot
+  lineinfile:
+    path: /etc/modules-load.d/dm_crypt.conf
+    line: "dm_crypt"
+    create: yes
+    state: present
+
+- name: Ensure Longhorn storage directory exists
+  file:
+    path: /var/lib/longhorn
+    state: directory
+    mode: '0755'
+  when: rke2_type == 'agent'
 
 - name: Enable and start RKE2 agent service
   systemd:

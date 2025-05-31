@@ -1,6 +1,6 @@
 ---
 # First control plane node
-- hosts: "{{ cluster_name }}_init_server"
+- hosts: "{{ cluster_name }}_{{ cluster_env }}_init_server"
   become: true
   vars:
     rke2_type: server
@@ -11,9 +11,9 @@
     rke2_node_taints:
       - "CriticalAddonsOnly=true:NoExecute"
   roles:
-    - rke2-bootstrap-cluster
+    - rke2-configure-cluster
 
-- hosts: "{{ cluster_name }}_init_server"
+- hosts: "{{ cluster_name }}_{{ cluster_env }}_init_server"
   become: true
   vars:
     rke2_type: server
@@ -21,7 +21,7 @@
     - rke2-fetch-ca-pem
     
 - name: Initialize keepalived on k8s-01 servers
-  hosts: "{{ cluster_name }}_servers"
+  hosts: "{{ cluster_name }}_{{ cluster_env }}_servers"
   become: yes
   vars:
     keepalived_vip: "{{ cluster_vip }}"
@@ -40,7 +40,7 @@
     - keepalived-install-and-configure
 
 # Additional control plane nodes
-- hosts: "{{ cluster_name }}_additional_servers"
+- hosts: "{{ cluster_name }}_{{ cluster_env }}_additional_servers"
   become: true
   pre_tasks:
     - name: Wait for init server to be ready
@@ -59,10 +59,10 @@
     rke2_node_taints:
       - "CriticalAddonsOnly=true:NoExecute"
   roles:
-    - rke2-bootstrap-cluster
+    - rke2-configure-cluster
 
 # Worker nodes
-- hosts: "{{ cluster_name }}_agents"
+- hosts: "{{ cluster_name }}_{{ cluster_env }}_agents"
   become: true
   pre_tasks:
     - name: Wait for init server to be ready
@@ -76,5 +76,5 @@
     rke2_type: agent
     rke2_server_url: "https://{{ cluster_vip }}:9345"
   roles:
-    - rke2-bootstrap-cluster
+    - rke2-configure-cluster
 

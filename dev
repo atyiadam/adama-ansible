@@ -1,0 +1,17 @@
+[k8s_01_dev_init_server]
+server-01.k8s-01.dev.home.adamatyi.com rke2_type=server is_init_server=true keepalived_priority=200 keepalived_state=MASTER keepalived_peers='["10.10.30.129", "10.10.30.130"]'
+
+[k8s_01_dev_additional_servers]
+server-02.k8s-01.dev.home.adamatyi.com rke2_type=server keepalived_priority=100 keepalived_state=BACKUP keepalived_peers='["10.10.30.128", "10.10.30.130"]'
+server-03.k8s-01.dev.home.adamatyi.com rke2_type=server keepalived_priority=50 keepalived_state=BACKUP keepalived_peers='["10.10.30.128", "10.10.30.129"]'
+
+[k8s_01_dev_servers:children]
+k8s_01_dev_init_server
+k8s_01_dev_additional_servers
+
+[k8s_01_dev_agents]
+agent-01.k8s-01.dev.home.adamatyi.com rke2_type=agent 
+
+[k8s_01_dev_cluster:children]
+k8s_01_dev_servers
+k8s_01_dev_agents

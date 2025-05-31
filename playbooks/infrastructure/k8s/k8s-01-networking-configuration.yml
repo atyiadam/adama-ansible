@@ -1,12 +1,25 @@
----
 - name: k8s-01 RKE2 networking configuration
-  hosts: k8s_01_cluster
+  hosts: k8s_01_prod_cluster
   become: yes
   vars:
     # Network CIDRs
     rke2_server_cidr: "10.10.30.144/29"
     rke2_agent_cidr: "10.10.30.152/29"
     rke2_cluster_cidr: "10.10.30.144/28"
+    trusted_network: "10.10.30.0/24"
+    loadbalancer_ip: "10.10.30.110/32"
+  roles:
+    - rke2-core-networking
+    - rke2-cilium-networking
+
+- name: k8s-01 RKE2 dev networking configuration
+  hosts: k8s_01_dev_cluster
+  become: yes
+  vars:
+    # Network CIDRs
+    rke2_server_cidr: "10.10.30.128/29"
+    rke2_agent_cidr: "10.10.30.136/29"
+    rke2_cluster_cidr: "10.10.30.128/28"
     trusted_network: "10.10.30.0/24"
     loadbalancer_ip: "10.10.30.110/32"
   roles:

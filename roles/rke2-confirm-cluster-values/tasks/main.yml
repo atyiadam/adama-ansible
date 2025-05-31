@@ -1,0 +1,33 @@
+---
+- name: Gather list of target hosts
+  set_fact:
+    target_hosts: >-
+      {{ groups[cluster_name + '_' + cluster_env + '_init_server'] | default([]) +
+         groups[cluster_name + '_' + cluster_env + '_additional_servers'] | default([]) +
+         groups[cluster_name + '_' + cluster_env + '_agents'] | default([]) }}
+
+- name: Display target environment and hosts
+  debug:
+    msg:
+      - "Target environment: {{ cluster_env | upper }}"
+      - "Target cluster: {{ cluster_name }}"
+      - "The following hosts will be affected:"
+      - "{{ target_hosts | join('\n  - ') }}"
+
+- name: Display provided parameters
+  debug:
+    msg:
+      - "PARAMETERS:"
+      - "cluster_name: {{ cluster_name }}"
+      - "cluster_env: {{ cluster_env }}"
+      - "cluster_vip: {{ cluster_vip }}"
+      - "kubernetes_api_fqdn: {{ kubernetes_api_fqdn }}"
+
+- name: Confirm execution
+  pause:
+    prompt: "Are you sure you want to continue with these hosts? (yes/no)"
+  register: confirmation
+
+- name: Abort if not confirmed
+  meta: end_play
+  when: confirmation.user_input | lower != 'yes'

@@ -10,22 +10,23 @@ haproxy-1.home.adamatyi.com ansible_host=10.10.30.110
 [dockerhost]
 dockerhost.home.adamatyi.com ansible_host=10.10.30.101
 
-[k8s_01_init_server]
-server-01.k8s-01.prod.home.adamatyi.com rke2_type=server keepalived_priority=200 keepalived_state=MASTER keepalived_peers='["10.10.30.145", "10.10.30.146"]'
+[k8s_01_prod_init_server]
+server-01.k8s-01.prod.home.adamatyi.com rke2_type=server is_init_server=true keepalived_priority=200 keepalived_state=MASTER keepalived_peers='["10.10.30.145", "10.10.30.146"]'
 
-[k8s_01_additional_servers]
+[k8s_01_prod_additional_servers]
 server-02.k8s-01.prod.home.adamatyi.com rke2_type=server keepalived_priority=100 keepalived_state=BACKUP keepalived_peers='["10.10.30.144", "10.10.30.146"]'
 server-03.k8s-01.prod.home.adamatyi.com rke2_type=server keepalived_priority=50 keepalived_state=BACKUP keepalived_peers='["10.10.30.144", "10.10.30.145"]'
 
-[k8s_01_servers:children]
-k8s_01_init_server
-k8s_01_additional_servers
+[k8s_01_prod_servers:children]
+k8s_01_prod_init_server
+k8s_01_prod_additional_servers
 
-[k8s_01_agents]
+[k8s_01_prod_agents]
 agent-01.k8s-01.prod.home.adamatyi.com rke2_type=agent 
 agent-02.k8s-01.prod.home.adamatyi.com rke2_type=agent 
 agent-03.k8s-01.prod.home.adamatyi.com rke2_type=agent 
 
-[k8s_01_cluster:children]
-k8s_01_servers
-k8s_01_agents
+[k8s_01_prod_cluster:children]
+k8s_01_prod_servers
+k8s_01_prod_agents
+
