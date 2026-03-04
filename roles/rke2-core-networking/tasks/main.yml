@@ -27,6 +27,11 @@
     - port: '6443'
       proto: tcp
       src: "{{ trusted_network }}"
+
+    # Kubernetes API - Accept from VPN
+    - port: '6443'
+      proto: tcp
+      src: "{{ vpn_cidr }}"
       
     # RKE2 supervisor API - Accept from agent nodes
     - port: '9345'

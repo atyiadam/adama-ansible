@@ -37,6 +37,13 @@
         server_start: 2
         server_end: 2
         port: 8080
+      - name: registry
+        domain: registry.home.adamatyi.com
+        server_prefix: registry
+        server_ip_prefix: 10.10.30
+        server_start: 2
+        server_end: 2
+        port: 5002
       #===============================================================================
       # k8s-01.prod
       #===============================================================================
@@ -75,6 +82,13 @@
         server_start: 152
         server_end: 159
         port: 30084
+      - name: seerr
+        domain: seerr.home.adamatyi.com
+        server_prefix: seerr
+        server_ip_prefix: 10.10.30
+        server_start: 152
+        server_end: 159
+        port: 30086
       - name: k8s-01-prod-longhorn
         domain: longhorn-k8s-01-prod.home.adamatyi.com
         server_prefix: longhorn
@@ -82,6 +96,16 @@
         server_start: 152
         server_end: 159
         port: 30085
+      #===============================================================================
+      # k8s-01.dev
+      #===============================================================================
+      - name: k8s-01-dev-argocd
+        domain: argocd-k8s-01-dev.home.adamatyi.com
+        server_prefix: argocd
+        server_ip_prefix: 10.10.30
+        server_start: 128
+        server_end: 135
+        port: 30080
   roles:
     - haproxy-install-and-configure
 

@@ -14,6 +14,7 @@ rke2_install_script_url: "https://get.rke2.io"
 # Service configuration
 rke2_config_dir: "/etc/rancher/rke2"
 rke2_config_file: "{{ rke2_config_dir }}/config.yaml"
+rke2_config_file: "{{ rke2_config_dir }}/registries.yaml"
 rke2_autodeploy_manifests_dir: "/var/lib/rancher/rke2/server/manifests"
 
 # First server specific

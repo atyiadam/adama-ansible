@@ -11,6 +11,12 @@
     dest: "{{ rke2_config_file }}"
     mode: '0600'
 
+- name: Create RKE2 registries
+  template:
+    src: "registries.yaml.j2"
+    dest: "{{ rke2_registries_file }}"
+    mode: '0600'
+
 - name: Download RKE2 install script
   get_url:
     url: "{{ rke2_install_script_url }}"
